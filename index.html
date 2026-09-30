@@ -457,6 +457,8 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 32px;
+  background: var(--white);
+  color: var(--black);
 }
 .footer-top {
   display: flex;
@@ -465,7 +467,7 @@ footer {
   flex-wrap: wrap;
   gap: 24px;
   padding-bottom: 32px;
-  border-bottom: 1px solid var(--mid);
+  border-bottom: 1px solid rgba(14,14,14,0.15);
 }
 .footer-title {
   font-size: clamp(28px, 5vw, 64px);
@@ -483,13 +485,13 @@ footer {
 .footer-links a {
   font-size: 11px;
   font-weight: 600;
-  color: var(--grey);
+  color: #6b6b6b;
   text-decoration: none;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   transition: color 0.2s;
 }
-.footer-links a:hover { color: var(--white); }
+.footer-links a:hover { color: var(--black); }
 .footer-bottom {
   display: flex;
   justify-content: space-between;
@@ -498,8 +500,58 @@ footer {
 }
 .footer-credit {
   font-size: 10px;
-  color: var(--grey);
+  color: #6b6b6b;
   letter-spacing: 0.08em;
+}
+
+/* ── FOOTER · LOGOS DELS PARTNERS ── */
+.footer-partners {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(14,14,14,0.15);
+}
+.partners-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6b6b6b;
+}
+.partners-row {
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 36px 48px;
+}
+.partners-row img {
+  width: auto;
+  display: block;
+}
+.partners-row a {
+  display: block;
+  margin: 8px 20px;
+  opacity: 0.88;
+  transition: opacity 0.2s;
+}
+.partners-row a:hover { opacity: 1; }
+/* alçades òptiques: cada logo té una proporció diferent */
+.logo-kids   { height: 38px; }
+.logo-fablab { height: 26px; }
+.logo-desco  { height: 30px; }
+.logo-dep    { height: 30px; }
+.logo-accio  { height: 28px; }
+@media (max-width: 720px) {
+  .partners-row { padding: 4px 0; }
+  .partners-row a { margin: 6px 12px; }
+  .logo-kids { height: 28px; }
+  .logo-fablab { height: 19px; }
+  .logo-desco { height: 22px; }
+  .logo-dep { height: 22px; }
+  .logo-accio { height: 21px; }
 }
 
 /* ── RESPONSIVE ── */
@@ -953,8 +1005,22 @@ footer {
       <a href="https://fablabbcn.org/blog/emergent-ideas/atlas-of-weak-signals" target="_blank">Atlas of Weak Signals</a>
     </div>
   </div>
+  <div class="footer-partners">
+    <p class="partners-label">Un projecte de</p>
+    <div class="partners-row">
+      <a href="https://kids-cluster.com" target="_blank" rel="noopener"><img src="assets/logos/kids-cluster.png" alt="KID'S CLUSTER" class="logo-kids"></a>
+      <a href="https://fablabbcn.org" target="_blank" rel="noopener"><img src="assets/logos/fablab-iaac.png" alt="Fab Lab Barcelona · IAAC" class="logo-fablab"></a>
+      <a href="https://descoberta.cat" target="_blank" rel="noopener"><img src="assets/logos/descoberta.png" alt="Descoberta" class="logo-desco"></a>
+      <a href="https://www.dep.net" target="_blank" rel="noopener"><img src="assets/logos/dep.png" alt="D'EP Institut" class="logo-dep"></a>
+    </div>
+    <p class="partners-label">Amb el suport de</p>
+    <div class="partners-row support">
+      <a href="https://www.accio.gencat.cat" target="_blank" rel="noopener"><img src="assets/logos/accio-generalitat.png" alt="ACCIÓ · Generalitat de Catalunya" class="logo-accio"></a>
+    </div>
+  </div>
   <div class="footer-bottom">
     <p class="footer-credit">IAAC · Fab Lab Barcelona · 2024–2026</p>
+    <p class="footer-credit">Subvencions per a projectes cooperatius de clústers · ACE175/25/000039</p>
     <p class="footer-credit">Metodologia: Atles de Senyals Febles · Disseny Estratègic i Co-creació Infantil</p>
   </div>
 </footer>

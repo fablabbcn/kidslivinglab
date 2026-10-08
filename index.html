@@ -4,1024 +4,693 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KIDS Living Lab · Atles de Senyals Febles</title>
+<meta name="description" content="Kit de cartes i canvas per llegir senyals febles des del benestar infantil i convertir-los en escenaris de futur i accions concretes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --black: #0e0e0e;
-  --dark: #1a1a1a;
-  --mid: #333;
-  --grey: #555;
-  --light: #aaa;
-  --white: #f5f4f0;
-  --accent: #c8ff00;   /* lime accent */
-  --accent2: #ff3c00;  /* orange-red accent */
+  --ground: #F4F4F0;
+  --paper: #FAFAF7;
+  --mist: #E6E6E3;
+  --line: #DCDCD6;
+  --ink: #061A22;
+  --ink-soft: #4A5A60;
+  --white: #FFFFFF;
+
+  /* famílies de cartes (disseny: Aina Eguiluz) */
+  --lila: #6E6AB3;
+  --lila-deep: #3E3A85;
+  --lila-soft: #D6D3EA;
+  --cel: #5BA3DD;
+  --cel-text: #3D86C6;
+  --cel-deep: #1F5F96;
+  --cel-soft: #CFE3F4;
+  --verd: #2E9A6E;
+  --taronja: #E07A10;
+
+  --font: 'Hanken Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --wrap: 1280px;
+  --pad: clamp(20px, 4vw, 32px);
+  --section: clamp(72px, 10vw, 120px);
+  --r-card: 12px;
+  --r-panel: 18px;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  background: var(--black);
-  color: var(--white);
-  overflow-x: hidden;
+  font-family: var(--font);
+  background: var(--ground);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
+
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--lila); outline-offset: 3px; border-radius: 4px; }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: var(--pad); }
+.section { padding-block: var(--section); }
+
+.h2 {
+  font-size: clamp(40px, 5.5vw, 60px);
+  line-height: 1;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+.section-head {
+  display: flex; flex-wrap: wrap; gap: 24px 48px;
+  justify-content: space-between; align-items: flex-end;
+  margin-bottom: 48px;
+}
+.section-head p { max-width: 470px; color: var(--ink); }
+.wordmark { font-weight: 400; letter-spacing: -0.02em; text-decoration: none; }
+.wordmark i { font-style: italic; }
 
 /* ── NAV ── */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  background: var(--black);
-  border-bottom: 1px solid var(--mid);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 32px;
-  height: 52px;
+.nav {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(244, 244, 240, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
 }
-.nav-logo {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--white);
-  text-decoration: none;
+.nav .wrap {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; min-height: 68px;
 }
-.nav-links {
-  display: flex;
-  gap: 32px;
-  list-style: none;
+.nav .wordmark { font-size: 22px; }
+.nav-links { display: flex; align-items: center; gap: 28px; list-style: none; font-size: 15px; }
+.nav-links a { text-decoration: none; }
+.nav-links a:hover { color: var(--lila-deep); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 46px; padding: 0 22px;
+  border-radius: 999px; font-size: 15px; font-weight: 500;
+  text-decoration: none; border: 1px solid var(--ink);
 }
-.nav-links a {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--grey);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-.nav-links a:hover { color: var(--white); }
+.btn-ink { background: var(--ink); color: var(--ground); }
+.btn-ink:hover { background: var(--lila-deep); border-color: var(--lila-deep); }
+.btn-lila { background: var(--lila); border-color: var(--lila); color: var(--white); }
+.btn-lila:hover { background: var(--lila-deep); border-color: var(--lila-deep); }
+.btn-line:hover { background: var(--ink); color: var(--ground); }
 
 /* ── HERO ── */
-.hero {
-  min-height: 100vh;
-  background: var(--black);
-  background-image: radial-gradient(circle, #222 1px, transparent 1px);
-  background-size: 20px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 80px 48px 64px;
-  border-bottom: 1px solid var(--mid);
+.hero { position: relative; overflow: hidden; background: var(--mist); }
+.hero-letters {
+  position: absolute; inset: 0; pointer-events: none;
+  color: var(--paper); font-weight: 300; line-height: 0.8;
+  font-size: clamp(300px, 38vw, 540px);
 }
-.hero-eyebrow {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--grey);
-  margin-bottom: 24px;
+.hero-letters span { position: absolute; }
+.hero-letters .k { left: -3%; top: -0.12em; transform: rotate(-14deg); }
+.hero-letters .i { left: 24%; top: -0.22em; transform: rotate(8deg); }
+.hero-letters .s { left: 1%;  top: 0.7em;  transform: rotate(-6deg); }
+.hero-letters .d { left: 30%; top: 0.48em; transform: rotate(14deg); }
+.hero .wrap {
+  position: relative;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 56px;
+  padding-block: clamp(64px, 9vw, 110px) clamp(72px, 10vw, 120px);
 }
-.hero-title {
-  font-size: clamp(64px, 12vw, 160px);
-  font-weight: 900;
-  line-height: 0.88;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  color: var(--white);
+.hero-copy { flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
+.hero-kicker { font-size: 15px; font-weight: 500; }
+.hero h1 {
+  font-size: clamp(52px, 7.4vw, 96px);
+  line-height: 0.95; font-weight: 300; letter-spacing: -0.035em;
+  max-width: 11ch;
 }
-.hero-title span { color: var(--accent); }
-.hero-sub {
-  margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid var(--mid);
-  display: flex;
-  align-items: flex-start;
-  gap: 64px;
-  flex-wrap: wrap;
+.hero-lead { font-size: clamp(18px, 1.6vw, 21px); line-height: 1.5; max-width: 34em; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero-fan { flex: 1 1 400px; min-width: 0; position: relative; height: clamp(400px, 40vw, 540px); }
+.fan-card {
+  position: absolute; width: clamp(160px, 17vw, 240px);
+  border-radius: var(--r-card); overflow: hidden;
+  box-shadow: 0 20px 44px rgba(6, 26, 34, 0.2);
 }
-.hero-sub p {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--light);
-  max-width: 480px;
-}
-.hero-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.hero-meta-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.hero-meta-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--grey);
-}
-.hero-meta-value {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--light);
-}
+.fan-card:nth-child(1) { left: 2%;  top: 9%;  transform: rotate(-9deg); }
+.fan-card:nth-child(2) { left: 50%; top: 14%; transform: rotate(8deg); }
+.fan-card:nth-child(3) { left: 24%; top: 0;   width: clamp(175px, 18.5vw, 260px); }
 
-/* ── SECTION LAYOUT ── */
-section { border-bottom: 1px solid var(--mid); }
+/* ── CARTA (component) ── */
+.carta {
+  position: relative; aspect-ratio: 5 / 8;
+  border-radius: var(--r-card); overflow: hidden;
+  color: var(--white); background: var(--lila);
+}
+.carta img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.carta-ui {
+  position: absolute; inset: 0; padding: 12px;
+  display: flex; flex-direction: column;
+}
+.carta-top { display: flex; justify-content: space-between; gap: 8px; font-size: 10px; line-height: 1.2; }
+.carta-frame {
+  flex: 1; margin: 12px 4px 10px; border-radius: 8px;
+  display: flex; flex-direction: column; justify-content: center; gap: 10px;
+  padding: 14px; text-align: center;
+}
+.carta-signal .carta-frame { border: 1px solid rgba(255, 255, 255, 0.85); }
+.carta-signal::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 22%;
+  background: linear-gradient(to top, rgba(6, 26, 34, 0.42), rgba(6, 26, 34, 0));
+}
+.carta-signal .carta-ui { z-index: 1; }
+.carta-name { text-align: center; font-size: 15px; line-height: 1.2; min-height: 1.2em; }
+.carta-title { font-size: 17px; line-height: 1.15; hyphens: auto; overflow-wrap: break-word; }
+.carta-q { font-size: 14px; line-height: 1.35; }
+.carta-frame.fill { background: rgba(255, 255, 255, 0.1); }
+.c-oport { background: var(--lila); }
+.c-disp  { background: var(--cel-text); }
+.c-fric  { background: var(--verd); }
+.c-inter { background: var(--taronja); }
+.c-blanc { background: var(--paper); color: var(--ink); border: 1px solid var(--line); }
+.c-blanc .carta-frame { background: #E9E9E6; }
 
-.section-header {
-  padding: 48px 48px 0;
-  display: flex;
-  align-items: baseline;
-  gap: 24px;
-}
-.section-num {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: var(--grey);
-  flex-shrink: 0;
-}
-.section-title {
-  font-size: clamp(32px, 5vw, 72px);
-  font-weight: 900;
-  line-height: 0.9;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  color: var(--white);
-}
-.section-body {
-  padding: 48px;
-}
+/* ── QUÈ SÓN ── */
+.intro { display: flex; flex-wrap: wrap; gap: 48px 64px; }
+.intro .h2 { flex: 1 1 300px; }
+.intro-body { flex: 2 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+.intro-quote { font-size: clamp(24px, 2.6vw, 32px); line-height: 1.3; font-weight: 300; }
+.intro-body p { max-width: 42em; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
+.chips li { background: var(--ink); color: var(--ground); font-size: 13px; padding: 7px 14px; border-radius: 999px; }
 
-/* ── ABOUT ── */
-.about-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-}
-.about-text p {
-  font-size: 15px;
-  line-height: 1.75;
-  color: var(--light);
-  margin-bottom: 20px;
-}
-.about-text p:last-child { margin-bottom: 0; }
-.about-pillars {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.pillar {
-  padding: 24px 0;
-  border-bottom: 1px solid var(--mid);
-}
-.pillar:last-child { border-bottom: none; }
-.pillar-name {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 8px;
-}
-.pillar-desc {
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--light);
-}
+/* ── PROJECTE ── */
+.band { background: var(--paper); border-block: 1px solid var(--line); }
+.pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.pillar { padding-top: 20px; border-top: 1px solid var(--ink); }
+.pillar h3 { font-size: 22px; font-weight: 400; margin-bottom: 8px; }
+.pillar p { font-size: 15px; line-height: 1.55; color: var(--ink-soft); }
+.about-text { columns: 2 320px; column-gap: 48px; margin-bottom: 64px; }
+.about-text p { margin-bottom: 1em; break-inside: avoid; }
 
-/* ── DARK BAND ── */
-.dark-band {
-  background: var(--dark);
-  background-image: radial-gradient(circle, #2a2a2a 1px, transparent 1px);
-  background-size: 8px 8px;
-  padding: 64px 48px;
+/* ── DIMENSIONS ── */
+.dims { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.dim {
+  background: var(--white); border: 1px solid #E2E2DC; border-radius: 14px;
+  padding: 24px; display: flex; flex-direction: column; gap: 12px;
 }
-.big-quote {
-  font-size: clamp(22px, 4vw, 48px);
-  font-weight: 900;
-  line-height: 1.15;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  max-width: 900px;
-}
-.big-quote em {
-  font-style: normal;
-  color: var(--accent);
-}
+.dim h3 { font-size: 22px; font-weight: 400; line-height: 1.15; }
+.dim p { font-size: 15px; line-height: 1.55; }
+.dim ul { list-style: none; font-size: 14px; line-height: 1.5; color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 4px; }
 
-/* ── METHODOLOGY ── */
-.method-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1px;
-  background: var(--mid);
-  border: 1px solid var(--mid);
-}
-.method-card {
-  background: var(--black);
-  padding: 32px;
-}
-.method-card-num {
-  font-size: 56px;
-  font-weight: 900;
-  color: var(--mid);
-  line-height: 1;
-  margin-bottom: 16px;
-}
-.method-card-title {
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--white);
-  margin-bottom: 12px;
-}
-.method-card-desc {
-  font-size: 13px;
-  line-height: 1.65;
-  color: var(--grey);
-}
-.method-card.accent { background: var(--accent); }
-.method-card.accent .method-card-num { color: rgba(0,0,0,0.15); }
-.method-card.accent .method-card-title { color: var(--black); }
-.method-card.accent .method-card-desc { color: #333; }
+/* ── CARTES ── */
+.types { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; }
+.type { display: flex; flex-direction: column; gap: 14px; }
+.type h3 { font-size: 18px; font-weight: 500; }
+.type p { font-size: 14px; line-height: 1.5; color: var(--ink-soft); }
+.gallery-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 12px; margin: 88px 0 24px; }
+.gallery-head h3 { font-size: clamp(26px, 3vw, 34px); font-weight: 300; letter-spacing: -0.02em; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; list-style: none; }
 
-/* ── CARD TYPES ── */
-.card-types-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 24px;
-}
-.card-type {
-  border: 1px solid var(--mid);
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.card-type-dot {
-  width: 40px;
-  height: 40px;
-  border-radius: 4px;
-}
-.card-type-name {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--white);
-}
-.card-type-desc {
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--grey);
-}
+/* ── METODOLOGIA ── */
+.method { background: var(--mist); }
+.method-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.fact { background: var(--paper); border-radius: 14px; padding: 24px; }
+.fact strong { display: block; font-size: 30px; font-weight: 300; letter-spacing: -0.02em; margin-bottom: 4px; }
+.fact p { font-size: 15px; line-height: 1.5; color: var(--ink-soft); }
+.canvases { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); gap: 20px; }
+.canvas { background: var(--paper); border-radius: var(--r-panel); overflow: hidden; display: flex; flex-direction: column; }
+.canvas-head { padding: 32px; display: flex; flex-direction: column; gap: 8px; }
+.canvas-1 .canvas-head { background: var(--lila-soft); color: var(--lila-deep); }
+.canvas-2 .canvas-head { background: var(--cel-soft); color: var(--cel-deep); }
+.canvas-tag { font-size: 14px; font-weight: 600; }
+.canvas-head h3 { font-size: clamp(38px, 4vw, 48px); line-height: 1; font-weight: 300; letter-spacing: -0.02em; }
+.canvas-head p { font-size: 19px; }
+.canvas-body { padding: 32px; display: flex; flex-direction: column; gap: 28px; }
+.canvas-goal { font-size: 16px; }
+.canvas-meta { display: grid; grid-template-columns: 120px 1fr; gap: 8px 16px; font-size: 14px; line-height: 1.5; border-top: 1px solid var(--line); padding-top: 20px; }
+.canvas-meta dt { color: var(--ink-soft); }
 
-/* ── CANVAS SECTION ── */
-.canvas-section {
-  background: var(--white);
-  color: var(--black);
+/* esquemes dels canvas */
+.diagram { height: 220px; border-radius: 10px; position: relative; }
+.quad { background: #EFEFEC; }
+.quad .hot { position: absolute; left: 50%; top: 10%; width: 44%; height: 40%; background: var(--lila-soft); }
+.quad .ax-h { position: absolute; left: 6%; right: 6%; top: 50%; height: 1px; background: var(--ink); }
+.quad .ax-v { position: absolute; top: 10%; bottom: 10%; left: 50%; width: 1px; background: var(--ink); }
+.pill { position: absolute; transform: translate(-50%, -50%); font-size: 10px; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.pill.dark { background: var(--ink); color: var(--white); }
+.pill.lila { background: #7C78BF; color: var(--white); }
+.pill.repte { background: var(--white); color: var(--lila-deep); font-weight: 600; }
+.futur { display: grid; grid-template-columns: 1fr 3fr; grid-template-rows: 1fr 1fr; gap: 8px; }
+.futur > div { border-radius: 8px; position: relative; font-size: 11px; }
+.futur .repte { background: var(--ink); color: var(--white); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; }
+.futur .cent {
+  border: 1px solid var(--cel); background-color: #F2F6FA;
+  background-image: linear-gradient(#D8E7F5 1px, transparent 1px), linear-gradient(90deg, #D8E7F5 1px, transparent 1px);
+  background-size: 14px 14px;
 }
-.canvas-section .section-title { color: var(--black); }
-.canvas-section .section-num { color: var(--grey); }
+.futur .cent b { position: absolute; right: 10px; bottom: -2px; font-size: 48px; font-weight: 300; color: var(--cel-text); }
+.futur .cent span { position: absolute; left: 8px; top: 8px; background: var(--cel); color: var(--white); font-size: 9px; padding: 3px 8px; border-radius: 999px; }
+.futur .persona { background: #EAEAE7; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; }
+.futur .deu { background: #A9CDEB; padding: 6px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.futur .deu i { font-style: normal; background: var(--paper); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 300; color: var(--cel-text); }
 
-.canvas-header-block {
-  background: var(--black);
-  color: var(--white);
-  padding: 64px 48px;
-}
-.canvas-header-block .section-num { color: var(--grey); }
-.canvas-header-block .section-title { color: var(--white); }
-.canvas-question {
-  font-size: clamp(16px, 2.5vw, 28px);
-  font-style: italic;
-  color: var(--light);
-  margin-top: 16px;
-  max-width: 700px;
-}
+.steps { list-style: none; counter-reset: step; display: flex; flex-direction: column; }
+.step { counter-increment: step; display: grid; grid-template-columns: 48px 1fr; gap: 4px 12px; padding: 16px 0; border-top: 1px solid var(--line); }
+.step::before { content: counter(step, decimal-leading-zero); grid-row: span 2; font-size: 28px; font-weight: 300; line-height: 1; }
+.canvas-1 .step::before { color: var(--lila); }
+.canvas-2 .step::before { color: var(--cel-text); }
+.step h4 { font-size: 17px; font-weight: 500; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.step h4 small { font-size: 13px; font-weight: 400; color: var(--ink-soft); }
+.step p { font-size: 15px; line-height: 1.55; color: var(--ink-soft); }
+.step p q { color: var(--ink); }
+.canvas-result { margin-top: auto; padding: 24px 32px; background: #EFEFEC; font-size: 15px; }
+.canvas-result strong { font-weight: 600; }
+.method-note { margin-top: 32px; font-size: 19px; font-weight: 300; max-width: 40em; }
 
-.canvas-body {
-  padding: 48px;
-  background: var(--white);
+/* ── RECURSOS ── */
+.res { list-style: none; border-top: 1px solid var(--ink); }
+.res-row {
+  display: grid; grid-template-columns: 110px minmax(200px, 1fr) minmax(240px, 1.6fr) 210px;
+  gap: 12px 24px; align-items: center;
+  padding: 22px 0; border-bottom: 1px solid var(--line);
 }
-.canvas-intro {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  margin-bottom: 48px;
-  padding-bottom: 48px;
-  border-bottom: 1px solid #ddd;
-}
-.canvas-intro p {
-  font-size: 14px;
-  line-height: 1.75;
-  color: #333;
-  margin-bottom: 16px;
-}
-.canvas-meta-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.canvas-meta-list li {
-  padding: 12px 0;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  gap: 16px;
-  align-items: baseline;
-}
-.canvas-meta-list li:last-child { border-bottom: none; }
-.canvas-meta-key {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #999;
-  flex-shrink: 0;
-  width: 80px;
-}
-.canvas-meta-val {
-  font-size: 13px;
-  color: #111;
-}
-
-/* Steps */
-.steps {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.step {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 32px;
-  padding: 32px 0;
-  border-bottom: 1px solid #ddd;
-  align-items: start;
-}
-.step:last-child { border-bottom: none; }
-.step-num {
-  font-size: 64px;
-  font-weight: 900;
-  color: #e0e0e0;
-  line-height: 1;
-}
-.step-content {}
-.step-title {
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #111;
-  margin-bottom: 8px;
-}
-.step-time {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #999;
-  margin-bottom: 12px;
-}
-.step-desc {
-  font-size: 13px;
-  line-height: 1.7;
-  color: #444;
-}
-.step-desc strong { font-weight: 700; color: #111; }
-.step-tip {
-  margin-top: 12px;
-  padding: 12px 16px;
-  background: #f5f5f5;
-  border-left: 3px solid var(--black);
-  font-size: 12px;
-  line-height: 1.6;
-  color: #555;
-  font-style: italic;
-}
-
-/* ── RESOURCES ── */
-.resources-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1px;
-  background: var(--mid);
-  border: 1px solid var(--mid);
-}
-.resource-card {
-  background: var(--black);
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  text-decoration: none;
-  transition: background 0.2s;
-}
-.resource-card:hover { background: #161616; }
-.resource-tag {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--grey);
-}
-.resource-title {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--white);
-  line-height: 1.25;
-}
-.resource-desc {
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--grey);
-  flex: 1;
-}
-.resource-arrow {
-  font-size: 20px;
-  color: var(--accent);
-  align-self: flex-end;
-}
+.res-kind { font-size: 14px; font-weight: 600; color: var(--lila-deep); }
+.res-title { font-size: 24px; font-weight: 300; line-height: 1.2; }
+.res-desc { font-size: 15px; color: var(--ink-soft); }
+.res-links { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.dl { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid var(--ink); border-radius: 999px; font-size: 14px; text-decoration: none; white-space: nowrap; }
+.dl:hover { background: var(--ink); color: var(--ground); }
+.res-cards { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 8px; }
+.dl.small { min-height: 36px; font-size: 13px; padding: 0 14px; }
+.dl.oport { border-color: var(--lila); color: var(--lila-deep); }
+.dl.fric { border-color: var(--verd); color: #1F6E4E; }
+.dl.disp { border-color: var(--cel-text); color: var(--cel-deep); }
+.dl.inter { border-color: var(--taronja); color: #9A500A; }
+.dl.oport:hover { background: var(--lila); color: var(--white); }
+.dl.fric:hover { background: var(--verd); color: var(--white); }
+.dl.disp:hover { background: var(--cel-text); color: var(--white); }
+.dl.inter:hover { background: var(--taronja); color: var(--white); }
 
 /* ── FOOTER ── */
-footer {
-  padding: 48px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  background: var(--white);
-  color: var(--black);
-}
-.footer-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: 24px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid rgba(14,14,14,0.15);
-}
-.footer-title {
-  font-size: clamp(28px, 5vw, 64px);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 0.9;
-}
-.footer-links {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-align: right;
-}
-.footer-links a {
-  font-size: 11px;
-  font-weight: 600;
-  color: #6b6b6b;
-  text-decoration: none;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  transition: color 0.2s;
-}
-.footer-links a:hover { color: var(--black); }
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.footer-credit {
-  font-size: 10px;
-  color: #6b6b6b;
-  letter-spacing: 0.08em;
-}
-
-/* ── FOOTER · LOGOS DELS PARTNERS ── */
-.footer-partners {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid rgba(14,14,14,0.15);
-}
-.partners-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #6b6b6b;
-}
-.partners-row {
-  padding: 8px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 36px 48px;
-}
-.partners-row img {
-  width: auto;
-  display: block;
-}
-.partners-row a {
-  display: block;
-  margin: 8px 20px;
-  opacity: 0.88;
-  transition: opacity 0.2s;
-}
+.footer { background: var(--ink); color: var(--ground); }
+.footer-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px; padding-block: 80px 56px; }
+.footer .wordmark { font-size: clamp(40px, 5vw, 56px); font-weight: 300; }
+.footer-top p { max-width: 30em; color: #C9D0D2; margin-top: 12px; font-size: 15px; }
+.footer-links { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+.footer-links a { text-decoration: none; color: #C9D0D2; }
+.footer-links a:hover { color: var(--white); }
+.partners { background: var(--paper); color: var(--ink); }
+.partners .wrap { padding-block: 40px; display: flex; flex-direction: column; gap: 16px; }
+.partners-label { font-size: 13px; color: var(--ink-soft); }
+.partners-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 40px; }
+.partners-row a { display: block; opacity: 0.9; }
 .partners-row a:hover { opacity: 1; }
-/* alçades òptiques: cada logo té una proporció diferent */
-.logo-kids   { height: 38px; }
-.logo-fablab { height: 26px; }
-.logo-desco  { height: 30px; }
-.logo-dep    { height: 30px; }
-.logo-accio  { height: 28px; }
-@media (max-width: 720px) {
-  .partners-row { padding: 4px 0; }
-  .partners-row a { margin: 6px 12px; }
-  .logo-kids { height: 28px; }
-  .logo-fablab { height: 19px; }
-  .logo-desco { height: 22px; }
-  .logo-dep { height: 22px; }
-  .logo-accio { height: 21px; }
-}
+.logo-kids   { height: 38px; width: auto; }
+.logo-fablab { height: 26px; width: auto; }
+.logo-desco  { height: 30px; width: auto; }
+.logo-dep    { height: 30px; width: auto; }
+.logo-accio  { height: 28px; width: auto; }
+.footer-bottom a { color: #C9D0D2; }
+.footer-bottom a:hover { color: var(--white); }
+.footer-bottom .ccl { font-variant-numeric: tabular-nums; }
+.footer-bottom { padding-block: 24px 40px; display: flex; flex-wrap: wrap; gap: 8px 32px; font-size: 13px; color: #9AA6AA; }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  nav { padding: 0 20px; }
-  .nav-links { display: none; }
-  .hero { padding: 80px 24px 48px; }
-  .section-header { padding: 40px 24px 0; }
-  .section-body { padding: 32px 24px; }
-  .about-grid { grid-template-columns: 1fr; }
-  .canvas-intro { grid-template-columns: 1fr; }
-  .canvas-header-block { padding: 48px 24px; }
-  .canvas-body { padding: 32px 24px; }
-  .dark-band { padding: 48px 24px; }
-  .step { grid-template-columns: 60px 1fr; gap: 16px; }
-  .step-num { font-size: 48px; }
-  footer { padding: 32px 24px; }
-  .footer-links { text-align: left; }
+@media (max-width: 900px) {
+  .nav-links li:not(:last-child) { display: none; }
+  .res-row { grid-template-columns: 1fr; }
+  .res-links { justify-content: flex-start; }
+  .res-cards { grid-column: 1; }
+}
+@media (max-width: 600px) {
+  .hero-fan { height: 360px; }
+  .fan-card { width: 150px; }
+  .fan-card:nth-child(3) { width: 165px; left: 26%; }
+  .canvas-head, .canvas-body { padding: 24px; }
+  .canvas-result { padding: 20px 24px; }
+  .canvas-meta { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .logo-kids { height: 28px; } .logo-fablab { height: 19px; } .logo-desco, .logo-dep { height: 22px; } .logo-accio { height: 21px; }
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="#">KIDS Living Lab</a>
-  <ul class="nav-links">
-    <li><a href="#projecte">Projecte</a></li>
-    <li><a href="#metodologia">Metodologia</a></li>
-    <li><a href="#cartes">Cartes</a></li>
-    <li><a href="#canvas1">Canvas 1</a></li>
-    <li><a href="#canvas2">Canvas 2</a></li>
-    <li><a href="#recursos">Recursos</a></li>
-  </ul>
-</nav>
+<header class="nav">
+  <div class="wrap">
+    <a class="wordmark" href="#inici">K<i>I</i>DS Living Lab</a>
+    <ul class="nav-links">
+      <li><a href="#projecte">Projecte</a></li>
+      <li><a href="#dimensions">Dimensions</a></li>
+      <li><a href="#cartes">Cartes</a></li>
+      <li><a href="#metodologia">Metodologia</a></li>
+      <li><a class="btn btn-ink" href="#recursos">Descarregar el kit</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
 
 <!-- HERO -->
 <section class="hero" id="inici">
-  <p class="hero-eyebrow">IAAC · Fab Lab Barcelona · 2024–2026</p>
-  <h1 class="hero-title">KIDS<br>Living<br><span>Lab</span></h1>
-  <div class="hero-sub">
-    <p>Un projecte de co-creació infantil que converteix senyals febles —tendències emergents, canvis subtils— en eines perquè nens i nenes dissenyin futurs possibles.</p>
-    <div class="hero-meta">
-      <div class="hero-meta-item">
-        <span class="hero-meta-label">Institució</span>
-        <span class="hero-meta-value">IAAC / Fab Lab Barcelona</span>
-      </div>
-      <div class="hero-meta-item">
-        <span class="hero-meta-label">Metodologia</span>
-        <span class="hero-meta-value">Atles de Senyals Febles</span>
-      </div>
-      <div class="hero-meta-item">
-        <span class="hero-meta-label">Públic</span>
-        <span class="hero-meta-value">Infants, educadors, facilitadors</span>
+  <div class="hero-letters" aria-hidden="true">
+    <span class="k">K</span><span class="i">I</span><span class="s">S</span><span class="d">D</span>
+  </div>
+  <div class="wrap">
+    <div class="hero-copy">
+      <p class="hero-kicker">Atles de Senyals Febles per a la infància</p>
+      <h1>Què està canviant en el món de la infància?</h1>
+      <p class="hero-lead">Un kit de cartes i canvas per llegir senyals febles des de les cinc dimensions del benestar infantil, i convertir-los en escenaris de futur i accions concretes.</p>
+      <div class="hero-actions">
+        <a class="btn btn-lila" href="#recursos">Descarregar el kit</a>
+        <a class="btn btn-line" href="#metodologia">Com funciona</a>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section id="projecte">
-  <div class="section-header">
-    <span class="section-num">01</span>
-    <h2 class="section-title">El<br>Projecte</h2>
-  </div>
-  <div class="section-body">
-    <div class="about-grid">
-      <div class="about-text">
-        <p>KIDS Living Lab és una iniciativa de l'IAAC i Fab Lab Barcelona que adapta la metodologia de l'Atles de Senyals Febles per al seu ús amb infants i adolescents. L'objectiu és que els propis nens i nenes puguin explorar, entendre i dissenyar respostes davant dels canvis emergents del món.</p>
-        <p>A través de tallers de co-creació, els participants aprenen a llegir senyals febles —tendències subtils que apunten cap a futurs possibles— i les fan servir per construir escenaris especulatius i proposar accions concretes.</p>
-        <p>El projecte combina disseny estratègic, pensament especulatiu i pedagogia maker per generar un conjunt d'eines que qualsevol facilitador pot fer servir en contextos educatius formals i informals.</p>
-      </div>
-      <div class="about-pillars">
-        <div class="pillar">
-          <p class="pillar-name">Co-creació</p>
-          <p class="pillar-desc">Els nens i nenes són agents actius del procés, no receptors. Les seves interpretacions i propostes són el centre de la metodologia.</p>
-        </div>
-        <div class="pillar">
-          <p class="pillar-name">Senyals Febles</p>
-          <p class="pillar-desc">Tendències emergents i canvis subtils en el comportament social, tecnològic o ambiental que anticipen futurs possibles.</p>
-        </div>
-        <div class="pillar">
-          <p class="pillar-name">Pensament Especulatiu</p>
-          <p class="pillar-desc">Construcció d'escenaris a 100 anys vista com a exercici d'imaginació crítica i presa de decisions en el present.</p>
-        </div>
-        <div class="pillar">
-          <p class="pillar-name">Acció Concreta</p>
-          <p class="pillar-desc">Dels futurs imaginats se'n deriven "presents alternatius": accions realitzables en els propers 10 anys.</p>
+    <div class="hero-fan" aria-hidden="true">
+      <div class="fan-card"><img src="assets/cards/ruptura-privilegi.jpg" alt=""></div>
+      <div class="fan-card"><img src="assets/cards/democracia-dades.jpg" alt=""></div>
+      <div class="fan-card carta carta-signal" style="background: var(--cel)">
+        <img src="assets/cards/consciencia-climatica.jpg" alt="">
+        <div class="carta-ui">
+          <div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div>
+          <div class="carta-frame"></div>
+          <div class="carta-name">Consciència climàtica</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- QUOTE BAND -->
-<div class="dark-band">
-  <p class="big-quote">Els senyals febles d'avui són els <em>futurs possibles</em> de demà. Aprendre a llegir-los és aprendre a prendre decisions.</p>
-</div>
-
-<!-- METHODOLOGY -->
-<section id="metodologia">
-  <div class="section-header">
-    <span class="section-num">02</span>
-    <h2 class="section-title">Metodologia</h2>
-  </div>
-  <div class="section-body">
-    <p style="font-size:14px;line-height:1.7;color:var(--light);max-width:700px;margin-bottom:40px;">La sessió tipus s'estructura en dues dinàmiques principals que es desenvolupen en seqüència, fent servir un conjunt de cartes com a detonador del diàleg col·lectiu.</p>
-    <div class="method-grid">
-      <div class="method-card accent">
-        <div class="method-card-num">01</div>
-        <div class="method-card-title">Mapa de Senyals</div>
-        <div class="method-card-desc">El grup explora i categoritza col·lectivament els senyals febles segons rellevància i interès per al repte proposat. Resultat: un mapa visual consensuat.</div>
-      </div>
-      <div class="method-card">
-        <div class="method-card-num">02</div>
-        <div class="method-card-title">Escenaris de Futur</div>
-        <div class="method-card-desc">A partir dels senyals seleccionats, el grup construeix un escenari especulatiu a 100 anys i defineix 3 accions concretes a 10 anys vista.</div>
-      </div>
-      <div class="method-card">
-        <div class="method-card-num">03</div>
-        <div class="method-card-title">Facilitació Activa</div>
-        <div class="method-card-desc">El facilitador no dirigeix el resultat. Fa preguntes, gestiona el temps i s'assegura que totes les veus hi participen en igualtat de condicions.</div>
-      </div>
-      <div class="method-card">
-        <div class="method-card-num">04</div>
-        <div class="method-card-title">Sense Respostes Correctes</div>
-        <div class="method-card-desc">La metodologia valora la diversitat de perspectives. El que importa és el raonament del grup, no arribar a una resposta única.</div>
-      </div>
-      <div class="method-card">
-        <div class="method-card-num">40–80'</div>
-        <div class="method-card-title">Durada Total</div>
-        <div class="method-card-desc">Canvas 1 requereix entre 40 i 55 minuts. Canvas 2 entre 60 i 80 minuts. Es poden fer en la mateixa sessió o en sessions separades.</div>
-      </div>
-      <div class="method-card">
-        <div class="method-card-num">8–25</div>
-        <div class="method-card-title">Participants</div>
-        <div class="method-card-desc">Dissenyat per a grups de 8 a 25 participants. En grups grans es recomana dividir en subgrups amb un facilitador per grup.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CARD TYPES -->
-<section id="cartes">
-  <div class="section-header">
-    <span class="section-num">03</span>
-    <h2 class="section-title">Les<br>Cartes</h2>
-  </div>
-  <div class="section-body">
-    <p style="font-size:14px;line-height:1.7;color:var(--light);max-width:700px;margin-bottom:40px;">El conjunt del KIDS Living Lab conté diferents tipus de cartes, cadascuna amb una funció específica en la dinàmica del taller.</p>
-    <div class="card-types-grid">
-      <div class="card-type">
-        <div class="card-type-dot" style="background:linear-gradient(135deg,#c8ff00 0%,#1a1a1a 100%);"></div>
-        <p class="card-type-name">Senyals Febles</p>
-        <p class="card-type-desc">Tendències emergents amb franges de colors que representen les dimensions: social, tecnològica, ambiental, econòmica i cultural.</p>
-      </div>
-      <div class="card-type">
-        <div class="card-type-dot" style="background:#ff3c00;"></div>
-        <p class="card-type-name">Àrees d'Oportunitat</p>
-        <p class="card-type-desc">Espais d'intervenció possible on els senyals febles poden transformar-se en propostes de canvi positiu.</p>
-      </div>
-      <div class="card-type">
-        <div class="card-type-dot" style="background:#0057ff;"></div>
-        <p class="card-type-name">Disparadores</p>
-        <p class="card-type-desc">Esdeveniments o canvis que podrien accelerar o intensificar el desenvolupament d'un senyal feble. Obren l'imaginari especulatiu.</p>
-      </div>
-      <div class="card-type">
-        <div class="card-type-dot" style="background:#888;"></div>
-        <p class="card-type-name">Interessats</p>
-        <p class="card-type-desc">Perfils d'actors (persones, institucions, col·lectius) que tenen interès o es veuen afectats pel repte treballat.</p>
-      </div>
-      <div class="card-type">
-        <div class="card-type-dot" style="background:#333;border:2px solid #555;"></div>
-        <p class="card-type-name">Friccions</p>
-        <p class="card-type-desc">Obstacles, tensions i resistències que dificulten l'avenç cap als escenaris desitjats. Útils per pensar en contrapesos.</p>
-      </div>
-      <div class="card-type">
-        <div class="card-type-dot" style="background:#f5f4f0;border:2px solid #555;"></div>
-        <p class="card-type-name">Cartes en Blanc</p>
-        <p class="card-type-desc">Perquè els participants creïn els seus propis senyals, interessats o accions quan el conjunt no cobreix algun concepte que sorgeix al taller.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CANVAS 1 -->
-<div id="canvas1">
-  <div class="canvas-header-block">
-    <div style="display:flex;align-items:baseline;gap:16px;">
-      <span class="section-num">04</span>
-      <div>
-        <h2 class="section-title" style="color:var(--white);">Canvas 1</h2>
-        <p class="canvas-question">Quins senyals ens importen per al nostre repte?</p>
-      </div>
-    </div>
-  </div>
-  <div class="canvas-body">
-    <div class="canvas-intro">
-      <div>
-        <p><strong>Objectiu:</strong> Que el grup explori i comprengui les cartes de Senyals Febles i les categoritzi col·lectivament segons la seva rellevància i interès per al repte treballat. El resultat és un mapa compartit que identifica quins senyals mereixen més atenció.</p>
-        <p>El canvas té dos eixos: <strong>Rellevant / Irrellevant</strong> (eix vertical) i <strong>Poc interessant / Molt interessant</strong> (eix horitzontal). Cada carta es col·loca al quadrant que millor la representa <em>en relació al repte concret</em>.</p>
-      </div>
-      <ul class="canvas-meta-list">
-        <li>
-          <span class="canvas-meta-key">Durada</span>
-          <span class="canvas-meta-val">40–55 minuts</span>
-        </li>
-        <li>
-          <span class="canvas-meta-key">Materials</span>
-          <span class="canvas-meta-val">Canvas imprès, conjunt de cartes, cartes en blanc, retoladors</span>
-        </li>
-        <li>
-          <span class="canvas-meta-key">Resultat</span>
-          <span class="canvas-meta-val">Mapa visual i consensuat de senyals febles classificats per rellevància i interès</span>
-        </li>
-        <li>
-          <span class="canvas-meta-key">Pas següent</span>
-          <span class="canvas-meta-val">Les cartes del quadrant Rellevant + Molt Interessant passen al Canvas 2</span>
-        </li>
+<!-- QUÈ SÓN -->
+<section class="section" id="senyals">
+  <div class="wrap intro">
+    <h2 class="h2">Què són els Senyals Febles?</h2>
+    <div class="intro-body">
+      <p class="intro-quote">Un senyal feble és un indicador primerenc de canvi que té poc o cap impacte en el present, però té el potencial de desencadenar grans transformacions en el futur.</p>
+      <p>Es pot entendre com una tendència abans de ser tendència: un debat emergent, un comportament que encara és minoritari, una tecnologia que encara no ha arribat al gran públic, o una pràctica social que està canviant de forma silenciosa. Sempre són més clars en retrospectiva, i per això el moment de treballar-hi és ara, quan encara són fràgils i oberts a la interpretació.</p>
+      <ul class="chips" aria-label="També coneguts com">
+        <li>Black swan</li><li>Wild card</li><li>Tendència emergent</li><li>Senyal precursor</li><li>Indicador disruptiu</li>
       </ul>
     </div>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <p class="step-title">Definir el repte</p>
-          <p class="step-time">5 min</p>
-          <p class="step-desc">Escriu el repte del taller en una carta blanca amb lletres clares i col·loca-la al centre del canvas. Presenta el repte al grup i obre un breu espai de diàleg per assegurar que tothom l'entén de la mateixa manera. Si hi ha interpretacions molt diferents, ajusta la redacció en consens abans de continuar.</p>
-          <div class="step-tip">És fonamental que el grup comparteixi una mateixa lectura del repte abans de passar a les cartes.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <p class="step-title">Repartir les cartes</p>
-          <p class="step-time">3 min</p>
-          <p class="step-desc">Barreja el conjunt de Senyals Febles i distribueix-lo entre els participants a parts iguals. Demana a cada participant que llegeixi les seves cartes en silenci i que pensi què pot significar cadascuna.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <p class="step-title">Lectura individual</p>
-          <p class="step-time">5–10 min</p>
-          <p class="step-desc">Cada participant llegeix les seves cartes individualment. L'objectiu no és entendre-les totes perfectament, sinó fer-se una primera impressió. Anima el grup a no bloquejar-se: <strong>"Què t'evoca aquesta paraula o imatge?"</strong></p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <p class="step-title">Presentació i discussió carta a carta</p>
-          <p class="step-time">20–30 min</p>
-          <p class="step-desc">Els participants van exposant les seves cartes una a una, per torns. Per a cada carta: el participant la mostra i explica què creu que significa; el grup comenta i afegeix matisos; si el grup arriba a una definició pròpia, s'escriu al dors; i un cop compresa, el participant la col·loca al quadrant del canvas que millor la representa <strong>en relació al repte</strong>.</p>
-          <div class="step-tip">No hi ha respostes correctes ni incorrectes. El que importa és el criteri del grup respecte al repte concret.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-content">
-          <p class="step-title">Posada en comú i ajustos</p>
-          <p class="step-time">5–10 min</p>
-          <p class="step-desc">El facilitador convida el grup a fer un pas enrere i observar el mapa complet. Preguntes útils: Hi ha alguna carta que generi dubtes sobre la seva posició? Hi ha quadrants buits o molt saturats? Coincideix el resultat amb les intuicions inicials? Es poden moure cartes si el grup ho decideix conjuntament.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">6</div>
-        <div class="step-content">
-          <p class="step-title">Selecció</p>
-          <p class="step-time">5 min</p>
-          <p class="step-desc">Identifica les cartes ubicades al quadrant <strong>Rellevant + Molt Interessant</strong>. Aquests són els senyals prioritaris i es portaran al Canvas 2 per aprofundir-hi.</p>
-        </div>
-      </div>
-    </div>
   </div>
-</div>
+</section>
 
-<!-- CANVAS 2 -->
-<div id="canvas2">
-  <div class="canvas-header-block" style="background:#111;">
-    <div style="display:flex;align-items:baseline;gap:16px;">
-      <span class="section-num">05</span>
-      <div>
-        <h2 class="section-title" style="color:var(--white);">Canvas 2</h2>
-        <p class="canvas-question">Cap on podem anar? Què fem avui?</p>
-      </div>
+<!-- PROJECTE -->
+<section class="section band" id="projecte">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2">La infància com a laboratori</h2>
     </div>
-  </div>
-  <div class="canvas-body">
-    <div class="canvas-intro">
-      <div>
-        <p><strong>Objectiu:</strong> A partir dels senyals seleccionats, el grup construeix col·lectivament un escenari de futur especulatiu a 100 anys vista i defineix 3 accions concretes en els propers 10 anys que permetin caminar cap a aquell escenari.</p>
-        <p>El canvas es divideix en dos hemisferis: el <strong>superior</strong> (100 anys) per a l'escenari especulatiu, lliure i creatiu; i l'<strong>inferior</strong> (10 anys) per a les 3 accions concretes o "presents alternatius".</p>
-      </div>
-      <ul class="canvas-meta-list">
-        <li>
-          <span class="canvas-meta-key">Durada</span>
-          <span class="canvas-meta-val">60–80 minuts</span>
-        </li>
-        <li>
-          <span class="canvas-meta-key">Materials</span>
-          <span class="canvas-meta-val">Canvas 2, senyals seleccionats del Canvas 1, cartes d'interessats, oportunitats, friccions i disparadores, enganxines de colors</span>
-        </li>
-        <li>
-          <span class="canvas-meta-key">Resultat</span>
-          <span class="canvas-meta-val">Escenari especulatiu a 100 anys + 3 accions concretes a 10 anys vista</span>
-        </li>
-        <li>
-          <span class="canvas-meta-key">Input necessari</span>
-          <span class="canvas-meta-val">Cartes del quadrant Rellevant + Molt Interessant del Canvas 1</span>
-        </li>
-      </ul>
+    <div class="about-text">
+      <p>KIDS Living Lab és una iniciativa de l'IAAC i Fab Lab Barcelona que adapta la metodologia de l'<a href="https://fablabbcn.org/blog/emergent-ideas/atlas-of-weak-signals" target="_blank" rel="noopener">Atlas of Weak Signals</a> al sector infantil. Partim de la convicció que la infància no és només la destinatària de les polítiques i els dissenys del futur, sinó també un actor actiu en la seva construcció.</p>
+      <p>Hem revisat els senyals febles originals de l'Atlas i els hem reinterpretat des de les cinc dimensions del benestar infantil, creant un joc de cartes que connecta cada senyal amb els reptes reals de nens, famílies, educadors, institucions i empreses del sector.</p>
+      <p>El projecte combina disseny estratègic, pensament especulatiu i pedagogia maker per generar un conjunt d'eines que qualsevol facilitador pot fer servir en contextos educatius formals i informals.</p>
     </div>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <p class="step-title">Traslladar el repte</p>
-          <p class="step-time">2 min</p>
-          <p class="step-desc">Col·loca la carta del repte (ja definida al Canvas 1) a l'espai corresponent del Canvas 2. Recorda breument al grup quin és el repte que treballaran.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <p class="step-title">Identificar els interessats</p>
-          <p class="step-time">10 min</p>
-          <p class="step-desc">Pregunta al grup: <strong>Qui té interès que aquest repte es resolgui bé? Qui es veuria afectat?</strong> Revisa les cartes d'Interessats disponibles i selecciona les que el grup consideri rellevants. Si algun perfil clau no és a les cartes, escriu-lo en una carta blanca.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <p class="step-title">Definir la persona destinatària</p>
-          <p class="step-time">5–10 min</p>
-          <p class="step-desc">Demana al grup que pensi en la persona concreta a qui va dirigit el repte: Qui és? Quants anys té? Com és la seva vida quotidiana? Escriu una breu descripció en una carta blanca. Aquesta carta es col·loca al canvas com a referència durant tota la dinàmica.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <p class="step-title">Activar el brainstorming</p>
-          <p class="step-time">5–10 min</p>
-          <p class="step-desc">Llegeix en veu alta algunes cartes d'<strong>Àrees d'Oportunitat</strong> per obrir l'imaginari del grup i alliberar la creativitat. No cal debatre-les en profunditat; n'hi ha prou que serveixin d'espurna.</p>
-          <div class="step-tip">També pots compartir cartes de Friccions i Disparadores: les friccions ajuden a pensar en obstacles; les disparadores, en canvis que podrien accelerar la transformació.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-content">
-          <p class="step-title">Construir l'escenari a 100 anys</p>
-          <p class="step-time">20–30 min</p>
-          <p class="step-desc">El grup treballa a l'hemisferi superior imaginant com podria ser el món d'aquí a 100 anys si els senyals seleccionats es desenvolupessin plenament. L'escenari pot ser optimista, pessimista o ambivalent: el que importa és que sigui coherent i argumentat. S'usen enganxines de colors per representar visualment els diferents conceptes i actors.</p>
-          <div class="step-tip">Preguntes generadores: Com viuen els nens i nenes en aquell futur? Què ha canviat respecte avui? Qui s'ha beneficiat? Quins senyals d'avui ja anticipaven aquell futur?</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">6</div>
-        <div class="step-content">
-          <p class="step-title">Definir els presents alternatius</p>
-          <p class="step-time">15–20 min</p>
-          <p class="step-desc">El grup baixa a l'hemisferi inferior i treballa la pregunta: <strong>Si aquell és el futur al qual volem (o volem evitar), què podem fer en els propers 10 anys?</strong> S'identifiquen 3 accions concretes. Cada acció ha de ser realitzable en 10 anys, prou concreta per imaginar qui la duria a terme, i connectada amb els senyals i l'escenari construït.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">7</div>
-        <div class="step-content">
-          <p class="step-title">Tancament i discussió</p>
-          <p class="step-time">10 min</p>
-          <p class="step-desc">Reflexió final sobre el canvas complet: Hi ha coherència entre l'escenari de 100 anys i les accions de 10 anys? Les accions proposades són oportunitats o respostes a friccions? Falta algun interessat que hauria d'assumir alguna d'aquestes accions? Si el grup ha construït més d'un escenari, es comparen i discuteixen.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- RESOURCES -->
-<section id="recursos" style="background:var(--black);">
-  <div class="section-header">
-    <span class="section-num">06</span>
-    <h2 class="section-title">Recursos</h2>
-  </div>
-  <div class="section-body">
-    <p style="font-size:14px;line-height:1.7;color:var(--light);max-width:700px;margin-bottom:40px;">Tots els materials del kit es poden descarregar lliurement. Inclou guia, atles, canvas i cartes en format PDF llest per imprimir.</p>
-    <div class="resources-grid">
-
-      <a class="resource-card" href="Kit/Guia%20de%20Facilitadors%20%C2%B7%20KIDS%20Living%20Lab.pdf" download>
-        <span class="resource-tag">PDF · Descàrrega</span>
-        <p class="resource-title">Guia de Facilitadors</p>
-        <p class="resource-desc">Guia completa per facilitar els tallers. Tots els passos i instruccions per a ambdós canvas.</p>
-        <span class="resource-arrow">↓</span>
-      </a>
-
-      <a class="resource-card" href="Kit/Atles%20de%20Senyals%20Febles%20%C2%B7%20KIDS%20Living%20Lab.pdf" download>
-        <span class="resource-tag">PDF · Descàrrega</span>
-        <p class="resource-title">Atles de Senyals Febles</p>
-        <p class="resource-desc">Manual visual complet de l'Atles de Senyals Febles, versió adaptada per al KIDS Living Lab.</p>
-        <span class="resource-arrow">↓</span>
-      </a>
-
-      <a class="resource-card" href="Kit/KLL_Canvas1.pdf" download>
-        <span class="resource-tag">PDF · Descàrrega</span>
-        <p class="resource-title">Canvas 1 — Mapa de Senyals</p>
-        <p class="resource-desc">Canvas imprimible amb eixos de rellevància i interès per a la dinàmica de classificació de senyals.</p>
-        <span class="resource-arrow">↓</span>
-      </a>
-
-      <a class="resource-card" href="Kit/KLL_Canvas2.pdf" download>
-        <span class="resource-tag">PDF · Descàrrega</span>
-        <p class="resource-title">Canvas 2 — Escenaris de Futur</p>
-        <p class="resource-desc">Canvas imprimible amb els dos hemisferis temporals: 100 anys (especulatiu) i 10 anys (accions).</p>
-        <span class="resource-arrow">↓</span>
-      </a>
-
-      <a class="resource-card" href="Kit/senyals_febles.docx%20(1).pdf" download>
-        <span class="resource-tag">PDF · Descàrrega</span>
-        <p class="resource-title">Document de Senyals Febles</p>
-        <p class="resource-desc">Recull dels senyals febles del projecte amb descripcions i dimensions de cada senyal.</p>
-        <span class="resource-arrow">↓</span>
-      </a>
-
-      <div style="background:var(--dark);padding:32px;border:1px solid var(--mid);display:flex;flex-direction:column;gap:12px;">
-        <span style="font-size:9px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);">PDF · Cartes — 9 arxius</span>
-        <p style="font-size:16px;font-weight:800;color:var(--white);line-height:1.25;">Cartes del Kit</p>
-        <p style="font-size:12px;line-height:1.6;color:var(--grey);">Totes les cartes del mazo per imprimir, separades per grups.</p>
-        <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px;">
-          <a href="Kit/Cards/Kid_s%20Living%20Lab%20(0).pdf" download style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;">↓ Cartes 0</a>
-          <a href="Kit/Cards/Kid_s%20Living%20Lab%20(1).pdf" download style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;">↓ Cartes 1</a>
-          <a href="Kit/Cards/Kid_s%20Living%20Lab%20(2).pdf" download style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;">↓ Cartes 2</a>
-          <a href="Kit/Cards/Kid_s%20Living%20Lab%20(3).pdf" download style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;">↓ Cartes 3</a>
-          <a href="Kit/Cards/Kid_s%20Living%20Lab%20(4).pdf" download style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;">↓ Cartes 4</a>
-          <a href="Kit/Cards/Kid_s%20Living%20Lab%20(5).pdf" download style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;">↓ Cartes 5</a>
-          <a href="Kit/Cards/Kid_s%20Living%20Lab%20(6).pdf" download style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;">↓ Cartes 6</a>
-          <a href="Kit/Cards/Kid_s%20Living%20Lab%20(7).pdf" download style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;">↓ Cartes 7</a>
-          <a href="Kit/Cards/Kid_s%20Living%20Lab%20(8).pdf" download style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;">↓ Cartes 8</a>
-        </div>
-      </div>
-
+    <div class="pillars">
+      <div class="pillar"><h3>Co-creació</h3><p>Els infants són agents actius del procés. Les seves interpretacions i propostes són el centre de la metodologia.</p></div>
+      <div class="pillar"><h3>Senyals febles</h3><p>Canvis subtils en el comportament social, tecnològic o ambiental que anticipen futurs possibles.</p></div>
+      <div class="pillar"><h3>Pensament especulatiu</h3><p>Escenaris a 100 anys vista com a exercici d'imaginació crítica.</p></div>
+      <div class="pillar"><h3>Acció concreta</h3><p>Dels futurs imaginats en surten "presents alternatius": accions realitzables en els propers 10 anys.</p></div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- DIMENSIONS -->
+<section class="section" id="dimensions">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2">Les 5 dimensions<br>del benestar infantil</h2>
+      <p>Cada senyal, àrea d'oportunitat, fricció i disparador està vinculat a una o diverses dimensions. El repte del grup decideix per on s'hi entra.</p>
+    </div>
+    <div class="dims">
+      <article class="dim">
+        <h3>Físic i entorns saludables</h3>
+        <p>Alimentació, activitat física, descans, serveis sanitaris i habitabilitat. El cos de la infància i l'espai on creix.</p>
+        <ul aria-label="Àrees d'oportunitat"><li>Alfabetització alimentària crítica</li><li>Urbanisme actiu i dinàmic</li><li>Humanització de l'experiència clínica</li></ul>
+      </article>
+      <article class="dim">
+        <h3>Mental i emocional</h3>
+        <p>Salut mental, regulació emocional, vincles afectius i relacions socials. El món interior de la infància.</p>
+        <ul aria-label="Àrees d'oportunitat"><li>Arquitectures d'autogestió emocional</li><li>Presència digitalment responsable</li><li>Prevenció i detecció precoç comunitària</li></ul>
+      </article>
+      <article class="dim">
+        <h3>Social i comunitari</h3>
+        <p>Inclusió, participació i capital social. La relació de la infància amb la seva comunitat, barri i institucions.</p>
+        <ul aria-label="Àrees d'oportunitat"><li>Disseny universal de l'experiència infantil</li><li>Governança de l'espai públic infantil</li><li>Xarxes de suport intergeneracional</li></ul>
+      </article>
+      <article class="dim">
+        <h3>Educatiu</h3>
+        <p>Oportunitats d'aprenentatge, entorns informals i competències per al futur. Com i on aprèn la infància avui.</p>
+        <ul aria-label="Àrees d'oportunitat"><li>Ecosistemes de sabers expandits</li><li>Aprenentatge basat en reptes comunitaris</li><li>Alfabetització per al futur crític</li></ul>
+      </article>
+      <article class="dim">
+        <h3>Espiritual i de valors</h3>
+        <p>Identitat, valors i capacitat de decisió moral. Un jo lliure i conscient en un entorn complex.</p>
+        <ul aria-label="Àrees d'oportunitat"><li>Sobirania de la narrativa personal</li><li>Sistemes d'ètica per disseny</li><li>Laboratoris de judici moral i ètic</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CARTES -->
+<section class="section band" id="cartes">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2">Sis tipus de cartes</h2>
+      <p>Cada família compleix una funció diferent dins la dinàmica. Els senyals febles en són el cor; la resta ajuden a obrir, tensionar i aterrar.</p>
+    </div>
+    <div class="types">
+      <div class="type">
+        <div class="carta carta-signal" style="background: var(--cel)">
+          <img src="assets/cards/justicia-multiespecie.jpg" alt="Il·lustració de la carta Justícia multiespècie">
+          <div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Justícia multiespècie</div></div>
+        </div>
+        <h3>Senyals febles</h3><p>Per explorar què està canviant: comportaments, tecnologies i dinàmiques que encara no han arribat al centre.</p>
+      </div>
+      <div class="type">
+        <div class="carta c-oport">
+          <div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Àrees d'oportunitat</span></div><div class="carta-frame fill"><span class="carta-title">Prevenció i detecció precoç comunitària</span></div><div class="carta-name">Salut mental</div></div>
+        </div>
+        <h3>Àrees d'oportunitat</h3><p>Per obrir possibilitats. Territoris concrets d'intervenció dins de cada dimensió.</p>
+      </div>
+      <div class="type">
+        <div class="carta c-disp">
+          <div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Disparadors</span></div><div class="carta-frame fill"><span class="carta-q">Hauria l'escola de tenir dret a guardar un historial setmanal de l'estat d'ànim de cada alumne?</span></div><div class="carta-name">Privacitat emocional</div></div>
+        </div>
+        <h3>Disparadors</h3><p>Per trencar supòsits. Preguntes provocadores que activen el pensament lateral.</p>
+      </div>
+      <div class="type">
+        <div class="carta c-fric">
+          <div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Friccions</span></div><div class="carta-frame fill"><span class="carta-q">Estem dissenyant espais perquè la infància sigui feliç o per amagar la seva ràbia i frustració?</span></div><div class="carta-name">La tirania de la felicitat</div></div>
+        </div>
+        <h3>Friccions</h3><p>Per identificar obstacles i dilemes ètics: què pot resistir o bloquejar el canvi.</p>
+      </div>
+      <div class="type">
+        <div class="carta c-inter">
+          <div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Interessats</span></div><div class="carta-frame fill"><span class="carta-title">Especialistes en desenvolupament infantil</span></div><div class="carta-name">Agents educatius</div></div>
+        </div>
+        <h3>Interessats</h3><p>Per mapar l'ecosistema: aliats, destinataris i agents de canvi.</p>
+      </div>
+      <div class="type">
+        <div class="carta c-blanc">
+          <div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Cartes en blanc</span></div><div class="carta-frame"></div><div class="carta-name">Noves perspectives</div></div>
+        </div>
+        <h3>Cartes en blanc</h3><p>Per adaptar el joc al teu context: nous senyals, el repte, la persona o definicions pròpies.</p>
+      </div>
+    </div>
+
+    <div class="gallery-head">
+      <h3>Els 17 senyals febles</h3>
+      <a href="#recursos">Descarregar totes les cartes</a>
+    </div>
+    <ul class="gallery">
+      <li class="carta carta-signal"><img src="assets/cards/democracia-dades.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Democràcia de dades</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/ruptura-privilegi.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Ruptura del privilegi</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/cthuluce.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Cthulucè</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/lluita-antropoce.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Lluita contra els conflictes de l'antropocè</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/proteccio-atencio.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Protecció de l'atenció</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/xarxes-cura.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Xarxes de cura comunitària</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/parentiu-promiscu.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Parentiu promiscu</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/guerres-veritat.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Guerres de la veritat</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/tecnologia-igualtat.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Tecnologia per a la igualtat</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/justicia-multiespecie.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Justícia multiespècie</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/identitats-queer.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Identitats queer</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/collaboracions-huma-maquina.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Col·laboracions creatives humà-màquina</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/imaginant-noves-feines.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Imaginant noves feines</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/disrompre-edatisme.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Disrompre l'edatisme</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/tot-es-compost.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Tot és compost</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/innovacio-no-heteropatriarcal.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Innovació no-heteropatriarcal</div></div></li>
+      <li class="carta carta-signal"><img src="assets/cards/consciencia-climatica.jpg" alt="" loading="lazy" decoding="async"><div class="carta-ui"><div class="carta-top"><span>KIDS Living Lab</span><span>Senyals febles</span></div><div class="carta-frame"></div><div class="carta-name">Consciència climàtica</div></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- METODOLOGIA -->
+<section class="section method" id="metodologia">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2">Dos canvas, en seqüència</h2>
+      <p>El Canvas 1 genera el material d'entrada del Canvas 2. Es poden fer en una mateixa sessió o en sessions separades.</p>
+    </div>
+    <div class="method-facts">
+      <div class="fact"><strong>40–80 min</strong><p>per canvas. Canvas 1, 40–55 minuts; Canvas 2, 60–80 minuts.</p></div>
+      <div class="fact"><strong>8–25</strong><p>participants. En grups grans, subgrups amb un facilitador per grup.</p></div>
+      <div class="fact"><strong>Sense respostes correctes</strong><p>El que importa és el criteri del grup respecte al repte concret.</p></div>
+    </div>
+
+    <div class="canvases">
+      <article class="canvas canvas-1" id="canvas1">
+        <header class="canvas-head">
+          <span class="canvas-tag">Canvas 1</span>
+          <h3>Mapa de senyals</h3>
+          <p>Quins senyals ens importen per al nostre repte?</p>
+        </header>
+        <div class="canvas-body">
+          <div class="diagram quad" role="img" aria-label="Esquema del Canvas 1: dos eixos, rellevància i interès, amb el repte al centre">
+            <div class="hot"></div><div class="ax-h"></div><div class="ax-v"></div>
+            <span class="pill lila" style="left: 50%; top: 10%">Rellevant</span>
+            <span class="pill dark" style="left: 50%; top: 90%">Irrellevant</span>
+            <span class="pill dark" style="left: 14%; top: 50%">Poc interessant</span>
+            <span class="pill lila" style="left: 86%; top: 50%">Molt interessant</span>
+            <span class="pill repte" style="left: 50%; top: 50%">Repte</span>
+          </div>
+          <p class="canvas-goal">El grup explora les cartes de Senyals Febles i les classifica col·lectivament segons la seva rellevància i interès per al repte.</p>
+          <ol class="steps">
+            <li class="step"><h4>Definir el repte <small>5 min</small></h4><p>Escriu-lo en una carta en blanc i col·loca-la al centre. Ajusta la redacció en consens fins que tothom en comparteixi la lectura.</p></li>
+            <li class="step"><h4>Repartir les cartes <small>3 min</small></h4><p>Barreja el munt de Senyals Febles i reparteix-lo a parts iguals.</p></li>
+            <li class="step"><h4>Lectura individual <small>5–10 min</small></h4><p>Primera impressió, sense bloquejar-se: <q>Què t'evoca aquesta paraula o imatge?</q></p></li>
+            <li class="step"><h4>Carta a carta <small>20–30 min</small></h4><p>Per torns, cada participant presenta una carta, el grup en debat el significat i se situa al quadrant que millor la representa en relació al repte. Si cal, s'escriu una definició pròpia al dors.</p></li>
+            <li class="step"><h4>Posada en comú i ajustos <small>5–10 min</small></h4><p>Hi ha quadrants buits o saturats? Alguna carta genera dubtes? Es poden moure cartes si el grup ho decideix.</p></li>
+            <li class="step"><h4>Selecció final <small>5 min</small></h4><p>Les cartes del quadrant Rellevant + Molt interessant passen al Canvas 2.</p></li>
+          </ol>
+          <dl class="canvas-meta">
+            <dt>Materials</dt><dd>Canvas 1 imprès (A3 o més gran), Senyals Febles, cartes en blanc, retoladors</dd>
+          </dl>
+        </div>
+        <p class="canvas-result"><strong>Resultat:</strong> un mapa consensuat de senyals classificats per rellevància i interès.</p>
+      </article>
+
+      <article class="canvas canvas-2" id="canvas2">
+        <header class="canvas-head">
+          <span class="canvas-tag">Canvas 2</span>
+          <h3>Escenaris de futur</h3>
+          <p>Cap on podem anar? Què fem avui?</p>
+        </header>
+        <div class="canvas-body">
+          <div class="diagram futur" role="img" aria-label="Esquema del Canvas 2: repte i persona destinatària a l'esquerra, escenari a 100 anys a dalt i tres presents alternatius a 10 anys a baix">
+            <div class="repte">Repte</div>
+            <div class="cent"><span>Futurs emergents</span><b>100</b></div>
+            <div class="persona">Persona destinatària</div>
+            <div class="deu"><i>10</i><i>10</i><i>10</i></div>
+          </div>
+          <p class="canvas-goal">A partir dels senyals seleccionats, el grup construeix un escenari especulatiu a 100 anys i defineix 3 accions concretes a 10 anys, els "presents alternatius", per caminar-hi.</p>
+          <ol class="steps">
+            <li class="step"><h4>Traslladar el repte <small>2 min</small></h4><p>La carta del repte del Canvas 1 passa a aquest canvas.</p></li>
+            <li class="step"><h4>Identificar els interessats <small>10 min</small></h4><p><q>Qui té interès que aquest repte es resolgui bé? Qui es veuria afectat?</q> Els perfils que faltin s'escriuen en blanc.</p></li>
+            <li class="step"><h4>Definir la persona destinatària <small>5–10 min</small></h4><p>Nom, edat, situació i motivacions, en una carta en blanc.</p></li>
+            <li class="step"><h4>Activar el brainstorming <small>5–10 min</small></h4><p>Llegiu en veu alta algunes Àrees d'oportunitat, Friccions i Disparadors per obrir l'imaginari.</p></li>
+            <li class="step"><h4>Construir l'escenari a 100 anys <small>20–30 min</small></h4><p>Com viuen els nens i les nenes en aquest futur? Qui s'ha beneficiat? Qui ha quedat exclòs? Pot ser utòpic o distòpic.</p></li>
+            <li class="step"><h4>Definir els presents alternatius <small>15–20 min</small></h4><p>Tres accions realitzables a 10 anys, concretes i connectades amb els senyals i l'escenari.</p></li>
+            <li class="step"><h4>Tancament i discussió <small>10 min</small></h4><p>Hi ha coherència entre escenari i accions? Falta algun interessat que n'hauria d'assumir alguna?</p></li>
+          </ol>
+          <dl class="canvas-meta">
+            <dt>Materials</dt><dd>Canvas 2 imprès (A3 o més gran), senyals clau del Canvas 1, Interessats, Àrees d'oportunitat, Friccions, Disparadors, cartes en blanc, retoladors</dd>
+          </dl>
+        </div>
+        <p class="canvas-result"><strong>Resultat:</strong> repte, interessats, persona, escenari a 100 anys i 3 presents alternatius a 10 anys.</p>
+      </article>
+    </div>
+    <p class="method-note">El paper de qui facilita és acompanyar el procés, no dirigir-lo. Les cartes han de parlar per elles mateixes.</p>
+  </div>
+</section>
+
+<!-- RECURSOS -->
+<section class="section" id="recursos">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2">Recursos</h2>
+      <p>Tot el kit es pot descarregar lliurement en PDF llest per imprimir.</p>
+    </div>
+    <ul class="res">
+      <li class="res-row">
+        <span class="res-kind">Guia</span>
+        <span class="res-title">Guia de facilitadors</span>
+        <span class="res-desc">Pas a pas per conduir les dues dinàmiques: temps, preguntes i resultat esperat.</span>
+        <span class="res-links"><a class="dl" href="Kit/KLL_Guia_Facilitadors.pdf" download>PDF</a></span>
+      </li>
+      <li class="res-row">
+        <span class="res-kind">Atles</span>
+        <span class="res-title">Atles de Senyals Febles</span>
+        <span class="res-desc">Què són els senyals febles, les cinc dimensions, els tipus de cartes i el resum dels canvas.</span>
+        <span class="res-links"><a class="dl" href="Kit/KLL_Atles_Senyals_Febles.pdf" download>PDF</a></span>
+      </li>
+      <li class="res-row">
+        <span class="res-kind">Canvas</span>
+        <span class="res-title">Canvas 1 i Canvas 2</span>
+        <span class="res-desc">Mapa de senyals i Escenaris de futur, per imprimir en A3 o més gran.</span>
+        <span class="res-links"><a class="dl" href="Kit/KLL_Canvas1.pdf" download>Canvas 1</a><a class="dl" href="Kit/KLL_Canvas2.pdf" download>Canvas 2</a></span>
+      </li>
+      <li class="res-row">
+        <span class="res-kind">Recull</span>
+        <span class="res-title">Recull de senyals febles</span>
+        <span class="res-desc">Descripció i dimensions associades a cada senyal del projecte.</span>
+        <span class="res-links"><a class="dl" href="Kit/KLL_Recull_Senyals_Febles.pdf" download>PDF</a></span>
+      </li>
+      <li class="res-row">
+        <span class="res-kind">Cartes</span>
+        <span class="res-title">Joc de cartes complet</span>
+        <span class="res-desc">Nou fulls d'impressió, ordenats per famílies.</span>
+        <span class="res-links"></span>
+        <span class="res-cards">
+          <a class="dl small" href="Kit/Cards/KLL_Cartes_01_Senyals-febles-A.pdf" download>Senyals febles 1/2</a>
+          <a class="dl small" href="Kit/Cards/KLL_Cartes_02_Senyals-febles-B_Arees-oportunitat-A.pdf" download>Senyals febles 2/2 + Àrees d'oportunitat 1/2</a>
+          <a class="dl small oport" href="Kit/Cards/KLL_Cartes_03_Arees-oportunitat-B.pdf" download>Àrees d'oportunitat 2/2</a>
+          <a class="dl small fric" href="Kit/Cards/KLL_Cartes_04_Friccions-A.pdf" download>Friccions 1/2</a>
+          <a class="dl small fric" href="Kit/Cards/KLL_Cartes_05_Friccions-B_Disparadors-A.pdf" download>Friccions 2/2 + Disparadors 1/2</a>
+          <a class="dl small disp" href="Kit/Cards/KLL_Cartes_06_Disparadors-B.pdf" download>Disparadors 2/2</a>
+          <a class="dl small inter" href="Kit/Cards/KLL_Cartes_07_Interessats-A.pdf" download>Interessats 1/2</a>
+          <a class="dl small inter" href="Kit/Cards/KLL_Cartes_08_Interessats-B.pdf" download>Interessats 2/2</a>
+          <a class="dl small" href="Kit/Cards/KLL_Cartes_09_En-blanc.pdf" download>Cartes en blanc</a>
+        </span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
 <footer>
-  <div class="footer-top">
-    <h2 class="footer-title">KIDS<br>Living<br>Lab</h2>
-    <div class="footer-links">
-      <a href="https://iaac.net" target="_blank">IAAC</a>
-      <a href="https://fablabbcn.org" target="_blank">Fab Lab Barcelona</a>
-      <a href="https://fablabbcn.org/blog/emergent-ideas/atlas-of-weak-signals" target="_blank">Atlas of Weak Signals</a>
+  <div class="partners">
+    <div class="wrap">
+      <p class="partners-label">Un projecte de</p>
+      <div class="partners-row">
+        <a href="https://kids-cluster.com" target="_blank" rel="noopener"><img src="assets/logos/kids-cluster.png" alt="KID'S CLUSTER" class="logo-kids"></a>
+        <a href="https://fablabbcn.org" target="_blank" rel="noopener"><img src="assets/logos/fablab-iaac.png" alt="Fab Lab Barcelona · IAAC" class="logo-fablab"></a>
+        <a href="https://descoberta.cat" target="_blank" rel="noopener"><img src="assets/logos/descoberta.png" alt="Descoberta" class="logo-desco"></a>
+        <a href="https://www.dep.net" target="_blank" rel="noopener"><img src="assets/logos/dep.png" alt="D'EP Institut" class="logo-dep"></a>
+      </div>
+      <p class="partners-label">Amb el suport de</p>
+      <div class="partners-row">
+        <a href="https://www.accio.gencat.cat" target="_blank" rel="noopener"><img src="assets/logos/accio-generalitat.png" alt="ACCIÓ · Generalitat de Catalunya" class="logo-accio"></a>
+      </div>
     </div>
   </div>
-  <div class="footer-partners">
-    <p class="partners-label">Un projecte de</p>
-    <div class="partners-row">
-      <a href="https://kids-cluster.com" target="_blank" rel="noopener"><img src="assets/logos/kids-cluster.png" alt="KID'S CLUSTER" class="logo-kids"></a>
-      <a href="https://fablabbcn.org" target="_blank" rel="noopener"><img src="assets/logos/fablab-iaac.png" alt="Fab Lab Barcelona · IAAC" class="logo-fablab"></a>
-      <a href="https://descoberta.cat" target="_blank" rel="noopener"><img src="assets/logos/descoberta.png" alt="Descoberta" class="logo-desco"></a>
-      <a href="https://www.dep.net" target="_blank" rel="noopener"><img src="assets/logos/dep.png" alt="D'EP Institut" class="logo-dep"></a>
+  <div class="footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div>
+          <span class="wordmark">K<i>I</i>DS Living Lab</span>
+          <p>Una iniciativa de l'IAAC i Fab Lab Barcelona que adapta l'Atlas of Weak Signals al sector infantil.</p>
+        </div>
+        <nav class="footer-links" aria-label="Enllaços externs">
+          <a href="https://iaac.net" target="_blank" rel="noopener">IAAC</a>
+          <a href="https://fablabbcn.org" target="_blank" rel="noopener">Fab Lab Barcelona</a>
+          <a href="https://fablabbcn.org/blog/emergent-ideas/atlas-of-weak-signals" target="_blank" rel="noopener">Atlas of Weak Signals</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>IAAC · Fab Lab Barcelona · 2024–2026</p>
+        <p>Subvencions per a projectes cooperatius de clústers · ACE175/25/000039</p>
+        <p>Web basada en el disseny gràfic del kit d'Aina Eguiluz</p>
+        <p class="ccl"><a href="https://santifu.github.io/ccl/" target="_blank" rel="noopener">CCL v2</a> — "Kids Living Lab" · AI: R2 I1 P1 O3 · HU: E3 L2 R4 B4 K3 J4</p>
+      </div>
     </div>
-    <p class="partners-label">Amb el suport de</p>
-    <div class="partners-row support">
-      <a href="https://www.accio.gencat.cat" target="_blank" rel="noopener"><img src="assets/logos/accio-generalitat.png" alt="ACCIÓ · Generalitat de Catalunya" class="logo-accio"></a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p class="footer-credit">IAAC · Fab Lab Barcelona · 2024–2026</p>
-    <p class="footer-credit">Subvencions per a projectes cooperatius de clústers · ACE175/25/000039</p>
-    <p class="footer-credit">Metodologia: Atles de Senyals Febles · Disseny Estratègic i Co-creació Infantil</p>
   </div>
 </footer>
 

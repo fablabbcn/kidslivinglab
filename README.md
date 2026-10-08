@@ -11,16 +11,16 @@ Web del projecte KIDS Living Lab, una iniciativa de co-creació infantil que ada
 web/
 ├── index.html          → Web principal
 └── Kit/
-    ├── Atles de Senyals Febles · KIDS Living Lab.pdf
-    ├── Guia de Facilitadors · KIDS Living Lab.pdf
+    ├── KLL_Atles_Senyals_Febles.pdf
+    ├── KLL_Guia_Facilitadors.pdf
     ├── KLL_Canvas1.pdf
     ├── KLL_Canvas2.pdf
-    ├── senyals_febles.docx (1).pdf
+    ├── KLL_Recull_Senyals_Febles.pdf
     └── Cards/
-        ├── Kid_s Living Lab (0).pdf
-        ├── Kid_s Living Lab (1).pdf
+        ├── KLL_Cartes_01_Senyals-febles-A.pdf
+        ├── KLL_Cartes_02_Senyals-febles-B_Arees-oportunitat-A.pdf
         ├── ...
-        └── Kid_s Living Lab (8).pdf
+        └── KLL_Cartes_09_En-blanc.pdf
 ```
 
 ## Com publicar a GitHub Pages

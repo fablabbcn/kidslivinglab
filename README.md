@@ -17,10 +17,13 @@ web/
     ├── KLL_Canvas2.pdf
     ├── KLL_Recull_Senyals_Febles.pdf
     └── Cards/
-        ├── KLL_Cartes_01_Senyals-febles-A.pdf
-        ├── KLL_Cartes_02_Senyals-febles-B_Arees-oportunitat-A.pdf
-        ├── ...
-        └── KLL_Cartes_09_En-blanc.pdf
+        ├── KLL_Cartes_Instruccions.pdf
+        ├── KLL_Cartes_SenyalsFebles.pdf
+        ├── KLL_Cartes_AreesOportunitat.pdf
+        ├── KLL_Cartes_Disparadors.pdf
+        ├── KLL_Cartes_Friccions.pdf
+        ├── KLL_Cartes_Interessats.pdf
+        └── KLL_Cartes_EnBlanc.pdf
 ```
 
 ## Com publicar a GitHub Pages
